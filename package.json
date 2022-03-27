@@ -1,0 +1,20 @@
+{
+  "name": "stylis-js",
+  "version": "1.0.0",
+  "description": "Stylis for css in js",
+  "main": "index.js",
+  "scripts": {
+    "start": "nodemon --exec babel-node index.js"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "devDependencies": {
+    "@babel/cli": "^7.17.6",
+    "@babel/core": "^7.17.8",
+    "@babel/node": "^7.16.8",
+    "@babel/preset-env": "^7.16.11",
+    "nodemon": "^2.0.15",
+    "stylis": "^4.0.13"
+  }
+}
