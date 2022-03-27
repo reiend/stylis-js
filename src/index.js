@@ -1,9 +1,10 @@
 import { compile, serialize, stringify, middleware, prefixer } from "stylis";
 
-import { useRm, useWriteFile, useMkdir } from "./hooks.js";
+import { useRm, useWriteFile, useMkdir } from "./hooks/fileSystem.js";
 
-// Todo create make this and object instead
+// Todo make this use object instead
 // temp
+
 const styleDiv = `
   .card {
     display: flex;
