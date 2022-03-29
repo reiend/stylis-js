@@ -43,6 +43,9 @@ const card = {
   backgroundColor: "red",
   color: "black",
   backgroundColor: "blue",
+  "&:hover": {
+    border: "1px solid black",
+  },
   div: {
     backgroundColor: "#ffffff",
     display: "flex",
