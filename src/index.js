@@ -1,4 +1,13 @@
-import { compile, serialize, stringify, middleware, prefixer } from "stylis";
+"use strict";
+
+import {
+  compile,
+  serialize,
+  stringify,
+  middleware,
+  prefixer,
+  whitespace,
+} from "stylis";
 
 import { useRm, useWriteFile, useMkdir } from "./hooks/fileSystem.js";
 
@@ -27,7 +36,7 @@ const stylis = (strStyle, hasPrefixer = true) => {
 const camelCaseToKebab = (word) => {
   const kebabRegex = /([a-z])([A-Z][a-z])/g;
   return word.replace(kebabRegex, "$1-$2").toLowerCase();
-}
+};
 
 const parseClass = (className) => {
   const classRegex = /^class_/g;
@@ -47,24 +56,57 @@ const card = {
     border: "1px solid black",
   },
   div: {
-    backgroundColor: "#ffffff",
-    display: "flex",
-  }
+    backgroundColor: "black",
+  },
 };
 
-const css = (queryName, obj) => {
-  const stringify = (key, obj) => {
-    const pseudoFilter = Object.entries(obj).filter(([key, value]) => typeof value == "object");
-    const directFilter = Object.entries(obj).filter(([key, value]) => typeof value != "object");
+const asString = (queryName, obj) => {
+  const toString = (key, obj) => {
+    const pseudoFilter = Object.entries(obj).filter(
+      ([key, value]) => typeof value == "object"
+    );
+    const directFilter = Object.entries(obj).filter(
+      ([key, value]) => typeof value != "object"
+    );
 
-    const directStyle = directFilter.map(([key, value]) => `${camelCaseToKebab(key)}: ${value};`).join("");
-    const pseudoStyle = pseudoFilter.map(([key, value]) => `${key} {${stringify(key, value)}}`);
+    const directStyle = directFilter
+      .map(([key, value]) => `${camelCaseToKebab(key)}: ${value};`)
+      .join("");
+    const pseudoStyle = pseudoFilter.map(
+      ([key, value]) => `${key} {${toString(key, value)}}`
+    );
+
     return [directStyle, pseudoStyle].join("");
-  }
-  return stylis([queryName, "{", stringify("", obj), "}"].join(""));
+  };
+  return stylis([queryName, "{", toString("", obj), "}"].join(""));
 };
 
-console.log(css(".card", card));
+// console.log(asString(".card ",card))
+
+const toCapitalize = (str) => str[0].toUpperCase() + str.slice(1);
+const testStyleStr = ".card{background-color:blue;color:black;}.card:hover{border:1px solid black;}.card div{background-color:black;}";
+const testStyleObj = {
+  div: {
+    backgroundColor: "blue",
+  },
+};
+
+const asObject = (css) => {
+
+  const splitDirectAndPseudo = css.split(";");
+  const headQueryNameRegex = /((\#|\.)?\w+(?=\{))/;
+  const headQueryName = css.match(headQueryNameRegex)[0];
+  const nestedQueryNameRegex = new RegExp(headQueryName, "g");
+  const cleanCssString = css.replace(headQueryNameRegex, "").replace(nestedQueryNameRegex, "&");
+
+  const toObject = (css) => {
+    console.log(css);
+  };
+
+  toObject(cleanCssString)
+};
+
+asObject(testStyleStr);
 
 const App = () => {
   const DISTRUBUTION_PATH = "./dist";
