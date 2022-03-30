@@ -26,13 +26,6 @@ const styleDiv = `
   }
 `;
 
-const stylis = (strStyle, hasPrefixer = true) => {
-  return serialize(
-    compile(strStyle),
-    middleware([hasPrefixer && prefixer, stringify])
-  );
-};
-
 const toKebab = (word) => {
   const kebabRegex = /([a-z])([A-Z][a-z])/g;
   return word.replace(kebabRegex, "$1-$2").toLowerCase();
@@ -48,6 +41,64 @@ const parseID = (id) => {
   return id.replace(idRegex, "#");
 };
 
+
+const toCapitalize = (str) => str[0].toUpperCase() + str.slice(1);
+
+
+const stylis = () => {
+
+  const toValidCss = (strStyle, hasPrefixer = true) =>
+    serialize(
+      compile(strStyle),
+      middleware([hasPrefixer && prefixer, stringify])
+    );
+
+  const asString = (queryName, obj) => {
+    const toString = (key, obj) => {
+      const pseudoFilter = Object.entries(obj).filter(
+        ([key, value]) => typeof value == "object"
+      );
+      const directFilter = Object.entries(obj).filter(
+        ([key, value]) => typeof value != "object"
+      );
+
+      const directStyle = directFilter
+        .map(([key, value]) => [toKebab(key), ":", value, ";"].join(""))
+        .join("");
+      const pseudoStyle = pseudoFilter.map(([key, value]) =>
+        [key, "{", toString(key, value), "}"].join("")
+      );
+
+      return [directStyle, pseudoStyle].join("");
+    };
+    return toValidCss([queryName, "{", toString("", obj), "}"].join(""));
+  };
+
+  const asObject = (css) => {
+    const splitDirectAndPseudo = css.split(";");
+    const headQueryNameRegex = /((\#|\.)?\w+(?=\{))/;
+    const headQueryName = css.match(headQueryNameRegex)[0];
+    const nestedQueryNameRegex = new RegExp(headQueryName, "g");
+    const cleanCssString = css
+      .replace(headQueryNameRegex, "")
+      .replace(nestedQueryNameRegex, "&");
+
+    const toObject = (css) => {
+      console.log(css);
+    };
+
+    toObject(cleanCssString);
+  };
+
+  const stylisObject = {
+    asString,
+    asObject,
+  };
+
+  return stylisObject;
+};
+
+
 const card = {
   backgroundColor: "red",
   color: "black",
@@ -60,31 +111,6 @@ const card = {
   },
 };
 
-const asString = (queryName, obj) => {
-  const toString = (key, obj) => {
-    const pseudoFilter = Object.entries(obj).filter(
-      ([key, value]) => typeof value == "object"
-    );
-    const directFilter = Object.entries(obj).filter(
-      ([key, value]) => typeof value != "object"
-    );
-
-    const directStyle = directFilter
-      .map(([key, value]) => [toKebab(key), ":", value, ";"].join(""))
-      .join("");
-    const pseudoStyle = pseudoFilter.map(
-      ([key, value]) => [key, "{", toString(key, value), "}"].
-      join("")
-    );
-
-    return [directStyle, pseudoStyle].join("");
-  };
-  return stylis([queryName, "{", toString("", obj), "}"].join(""));
-};
-
-console.log(asString(".card ",card))
-
-const toCapitalize = (str) => str[0].toUpperCase() + str.slice(1);
 const testStyleStr =
   ".card{background-color:blue;color:black;}.card:hover{border:1px solid black;}.card div{background-color:black;}";
 const testStyleObj = {
@@ -93,23 +119,7 @@ const testStyleObj = {
   },
 };
 
-const asObject = (css) => {
-  const splitDirectAndPseudo = css.split(";");
-  const headQueryNameRegex = /((\#|\.)?\w+(?=\{))/;
-  const headQueryName = css.match(headQueryNameRegex)[0];
-  const nestedQueryNameRegex = new RegExp(headQueryName, "g");
-  const cleanCssString = css
-    .replace(headQueryNameRegex, "")
-    .replace(nestedQueryNameRegex, "&");
-
-  const toObject = (css) => {
-    console.log(css);
-  };
-
-  toObject(cleanCssString);
-};
-
-asObject(testStyleStr);
+console.log(stylis().asString(".card", card))
 
 const App = () => {
   const DISTRUBUTION_PATH = "./dist";
