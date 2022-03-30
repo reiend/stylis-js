@@ -33,7 +33,7 @@ const stylis = (strStyle, hasPrefixer = true) => {
   );
 };
 
-const camelCaseToKebab = (word) => {
+const toKebab = (word) => {
   const kebabRegex = /([a-z])([A-Z][a-z])/g;
   return word.replace(kebabRegex, "$1-$2").toLowerCase();
 };
@@ -70,10 +70,11 @@ const asString = (queryName, obj) => {
     );
 
     const directStyle = directFilter
-      .map(([key, value]) => `${camelCaseToKebab(key)}: ${value};`)
+      .map(([key, value]) => [toKebab(key), ":", value, ";"].join(""))
       .join("");
     const pseudoStyle = pseudoFilter.map(
-      ([key, value]) => `${key} {${toString(key, value)}}`
+      ([key, value]) => [key, "{", toString(key, value), "}"].
+      join("")
     );
 
     return [directStyle, pseudoStyle].join("");
@@ -81,10 +82,11 @@ const asString = (queryName, obj) => {
   return stylis([queryName, "{", toString("", obj), "}"].join(""));
 };
 
-// console.log(asString(".card ",card))
+console.log(asString(".card ",card))
 
 const toCapitalize = (str) => str[0].toUpperCase() + str.slice(1);
-const testStyleStr = ".card{background-color:blue;color:black;}.card:hover{border:1px solid black;}.card div{background-color:black;}";
+const testStyleStr =
+  ".card{background-color:blue;color:black;}.card:hover{border:1px solid black;}.card div{background-color:black;}";
 const testStyleObj = {
   div: {
     backgroundColor: "blue",
@@ -92,18 +94,19 @@ const testStyleObj = {
 };
 
 const asObject = (css) => {
-
   const splitDirectAndPseudo = css.split(";");
   const headQueryNameRegex = /((\#|\.)?\w+(?=\{))/;
   const headQueryName = css.match(headQueryNameRegex)[0];
   const nestedQueryNameRegex = new RegExp(headQueryName, "g");
-  const cleanCssString = css.replace(headQueryNameRegex, "").replace(nestedQueryNameRegex, "&");
+  const cleanCssString = css
+    .replace(headQueryNameRegex, "")
+    .replace(nestedQueryNameRegex, "&");
 
   const toObject = (css) => {
     console.log(css);
   };
 
-  toObject(cleanCssString)
+  toObject(cleanCssString);
 };
 
 asObject(testStyleStr);
