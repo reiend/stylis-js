@@ -10,8 +10,8 @@ import {
   prefixer,
 } from "stylis";
 
-const Stylis = () => {
-  let stylis = null;
+const StylisJS = () => {
+  let stylisjs = null;
 
   const process = (strStyle, hasPrefixer = true) =>
     serialize(
@@ -31,7 +31,7 @@ const Stylis = () => {
     return stringify(cssObject, queryName);
   };
 
-  stylis = {
+  stylisjs = {
     css: {
       stringified,
     },
@@ -39,5 +39,5 @@ const Stylis = () => {
   return stylis;
 };
 
-export default Stylis;
+export default StylisJS;
 export { CssMake };
