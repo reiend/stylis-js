@@ -49,6 +49,8 @@ e.g:
 ```js
  ".card"
  "#header"
+  div
+  main
 ```
 
 ### processOptions - object
