@@ -3,7 +3,7 @@
 
 [Stylis](https://github.com/thysultan/stylis) for CSS-in-JS to CSS
 
-stylis-js uses Stylis, a lightweight css preprocessor. \
+stylis-js uses [Stylis](https://github.com/thysultan/stylis), a lightweight css preprocessor. \
 stylis-js allows creation of CSS with the power of JS. 
 
 ---
