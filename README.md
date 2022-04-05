@@ -1,7 +1,7 @@
-# Stylis-js
+# Stylis-js 
 
 
-[Stylis](https://github.com/thysultan/stylis) for CSS-in-JS to CSS
+[Stylis](https://github.com/thysultan/stylis) for CSS-in-JS to CSS. Inspired by PostCss-js
 
 stylis-js uses [Stylis](https://github.com/thysultan/stylis), a lightweight css preprocessor. \
 stylis-js allows creation of CSS with the power of JS. 
